@@ -6,13 +6,18 @@ ecosystem where you begin as a single scout and grow a superorganism.
 This repository is the **ship-ready foundation**: a genuinely playable vertical
 slice of the core loop (lone worker → pheromone trails → colony growth → food
 economy → combat) built on an architecture designed from day one to port to
-**PC and console** editions.
+**PC and console** editions. It ships a **fully 3D edition** (Three.js) with a
+seamless Ground → Colony → Ecosystem camera, plus a 2D edition that shares the
+exact same simulation.
 
-![Gameplay](docs/screenshot.png)
+| Ground — "six millimetres tall" | Colony — RTS boom | Ecosystem — the whole property |
+| --- | --- | --- |
+| ![Ground](docs/shot-3d-ground.png) | ![Colony](docs/shot-3d-colony.png) | ![Ecosystem](docs/shot-3d-ecosystem.png) |
 
-*Two rival colonies. Blue lines are exploration ("to-home") pheromone
-highways; bright green lines are reinforced food trails that emerge — not
-scripted — as ants discover a source and recruit nestmates to it.*
+*One continuous zoom axis: drop to the ground and grass towers against the sky;
+pull up and the pheromone highways of the whole ecosystem resolve at once. The
+bright green trails are reinforced food routes that **emerge** — not scripted —
+as ants discover a source and recruit nestmates to it.*
 
 ---
 
@@ -34,22 +39,28 @@ Other scripts:
 | `npm run lint`      | ESLint over `src/`                                        |
 | `npm run smoke`     | Headless browser smoke test of the built game             |
 
-## Controls
+## Controls (3D edition)
 
 Keyboard/mouse **and gamepad** are supported out of the box (the same code
 path a console edition uses).
 
-| Action                       | Keyboard / Mouse | Gamepad          |
-| ---------------------------- | ---------------- | ---------------- |
-| Move (when possessing an ant)| `WASD` / arrows  | Left stick       |
-| Possess ant under cursor / release | `E`        | A                |
-| Paint food trail             | hold `F`         | X                |
-| Paint home trail             | hold `H`         | B                |
-| Zoom                         | mouse wheel / `+` `-` | LB / RB     |
-| Toggle pheromone overlay     | `Tab`            | Y                |
-| Recenter camera              | `C`              | Back             |
-| Pause                        | `P`              | Start            |
-| New world (on win/lose)      | `Enter` / `Space`| A                |
+| Action                          | Keyboard / Mouse       | Gamepad        |
+| ------------------------------- | ---------------------- | -------------- |
+| Move ant (Ground) / pan camera  | `WASD` / arrows        | Left stick     |
+| Possess ant under cursor        | left click             | A              |
+| Release possession              | `R`                    | B              |
+| Orbit camera                    | `Q` / `E`              | LB / RB        |
+| Perspective: Ground/Colony/Eco  | `1` / `2` / `3`        | —              |
+| Zoom (glide between views)      | mouse wheel / `+` `-`  | Right stick Y  |
+| Paint food trail                | hold `F` (at cursor)   | X              |
+| Paint home trail                | hold `H` (at cursor)   | D-pad up       |
+| Toggle pheromone overlay        | `Tab`                  | Y              |
+| Recenter camera                 | `C`                    | Back           |
+| Pause                           | `P`                    | Start          |
+| New world (on win/lose)         | `Enter` / `Space`      | A              |
+
+The 2D edition (`?mode=2d`) uses the same actions with `E` to possess at the
+cursor.
 
 ## How to play the slice
 
@@ -75,13 +86,22 @@ src/
   core/        Pure TypeScript simulation. No DOM, no Web APIs, no device I/O.
                Deterministic (seeded RNG + fixed timestep). Runs in a browser,
                in Node (tests), or embedded in a native console shell — byte
-               for byte identically.
-  platform/    Abstraction interfaces (Renderer, InputSource, AudioSink) plus
-               the reference web/desktop implementation. A console port
-               implements these against its SDK; core/ and game/ don't change.
-  game/        Glue: fixed-step loop, camera, HUD, objectives — consumes the
-               core through the platform seam.
+               for byte identically. Shared by BOTH the 2D and 3D editions.
+  platform/    Device seams + reference web implementations:
+                 InputSource / AudioSink  (shared by 2D and 3D)
+                 Renderer (2D canvas)      + web/CanvasRenderer
+                 Host3D   (3D surface)     + web/WebHost3D
+                 three/   Three.js stage + instanced ant renderer (3D edition)
+               A console port re-implements these against its SDK; core/ and
+               game/ don't change.
+  game/        Glue: fixed-step loop, cameras, HUD, objectives. Two controllers
+               (Game = 2D, Game3D = 3D) drive the SAME Simulation.
 ```
+
+The 3D edition renders with **GPU-instanced ants** (thousands in one draw call),
+a **seamless three-mode camera** (`CameraRig`), a displaced-terrain world with
+scale props, and a **day/night cycle** — all over the untouched deterministic
+core. See [`docs/DESIGN_3D.md`](docs/DESIGN_3D.md).
 
 Determinism (see `src/core/math/Rng.ts` and `Simulation.step`) is not
 decoration: it is what makes save-states, replays, automated tests, console

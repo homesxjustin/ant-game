@@ -11,9 +11,19 @@ without disturbing the platform seam.
 - Pheromone-driven foraging with emergent trails; food economy; brood pipeline;
   worker/soldier/queen castes; colony-vs-colony combat.
 - Ant possession + manual trail painting.
-- Camera, HUD, Chapter-1 objectives, procedural seeded arena.
-- Platform seam with a web/desktop implementation (keyboard + mouse + gamepad).
-- Test suite (determinism, gameplay, pheromones) + headless browser smoke test.
+- **3D edition (Three.js):** seamless Ground → Colony → Ecosystem camera,
+  GPU-instanced ants, displaced terrain with scale props, day/night cycle,
+  terrain-conforming pheromone overlay, DOM HUD.
+- 2D edition sharing the identical simulation (`?mode=2d`).
+- Camera(s), HUD, Chapter-1 objectives, procedural seeded arena.
+- Platform seam with web/desktop hosts (keyboard + mouse + gamepad).
+- Test suite (determinism, gameplay, pheromones, terrain, camera) + headless
+  WebGL smoke test.
+
+> **Note on verticality:** the presentation is fully 3D, but the *simulation*
+> still navigates a plane. True volumetric climbing (trees, walls, vines) is the
+> single largest sim-layer expansion — tracked in Phase 3, called out so scope
+> stays honest.
 
 ## Phase 1 — Colony depth (`core/`, `game/`)
 

@@ -6,12 +6,22 @@
  * implementation, never a change in the game.
  */
 export enum GameAction {
-  /** Possess the ant under the cursor / reticle, or release if possessing. */
+  /** Possess the ant under the cursor / reticle (or nearest to camera focus
+   * on gamepad). */
   Possess = "possess",
+  /** Release the currently possessed ant. */
+  Release = "release",
   /** Paint a food-trail pheromone at the cursor / reticle. */
   PaintFood = "paintFood",
   /** Paint a home-trail pheromone at the cursor / reticle. */
   PaintHome = "paintHome",
+  /** Orbit the camera around its focus. */
+  OrbitLeft = "orbitLeft",
+  OrbitRight = "orbitRight",
+  /** Snap to a perspective preset (Ground / Colony / Ecosystem). */
+  PerspGround = "perspGround",
+  PerspColony = "perspColony",
+  PerspEcosystem = "perspEcosystem",
   ZoomIn = "zoomIn",
   ZoomOut = "zoomOut",
   Pause = "pause",

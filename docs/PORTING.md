@@ -75,8 +75,8 @@ platform dependencies and is already fixed-step + seeded.
 
 | Interface | Console implementation |
 | --------- | ---------------------- |
-| `Renderer` | Native graphics API (GNM/GNMX, D3D12, NVN/Vulkan). Implement the ~8 declarative primitives; batch the `ant`/`circle`/`drawField` calls into instanced draws. |
-| `InputSource` | Native controller API. Map physical buttons/sticks → the existing `GameAction` enum and `moveAxis`. **No game code changes** — the mapping is the whole job. On gamepad-only, `pointer()` returns `null` and possession targets the reticle at screen centre (already handled). |
+| Renderer (3D) | Native graphics API (GNM/GNMX, D3D12, NVN/Vulkan) behind a `ThreeStage`-shaped class: a displaced-terrain ground, instanced ant meshes, props, and a day/night lit scene driven by a `PerspectiveCamera` the `CameraRig` already positions. The 3D edition owns its surface via `Host3D`/`Surface3D`, so you provide the surface + renderer and reuse `CameraRig`, `WorldView3D`, and `Terrain` as-is. (The 2D `Renderer` interface — ~8 declarative primitives — remains available if a target wants the 2D edition instead.) |
+| `InputSource` | Native controller API. Map physical buttons/sticks → the existing `GameAction` enum and `moveAxis`. **No game code changes** — the mapping is the whole job. On gamepad-only, `pointer()` returns `null` and possession targets the camera focus (already handled). |
 | `AudioSink` | Platform audio mixer; map the named cues (`food`, `hatch`, `possess`, …) to samples. |
 
 ### 3. Provide a `Platform` + frame loop

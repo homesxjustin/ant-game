@@ -8,9 +8,14 @@ import { GameAction } from "../InputSource";
  * here; the game consumes abstract actions.
  */
 const KEY_BINDINGS: Record<string, GameAction> = {
-  KeyE: GameAction.Possess,
+  KeyR: GameAction.Release,
   KeyF: GameAction.PaintFood,
   KeyH: GameAction.PaintHome,
+  KeyQ: GameAction.OrbitLeft,
+  KeyE: GameAction.OrbitRight,
+  Digit1: GameAction.PerspGround,
+  Digit2: GameAction.PerspColony,
+  Digit3: GameAction.PerspEcosystem,
   Equal: GameAction.ZoomIn,
   Minus: GameAction.ZoomOut,
   KeyP: GameAction.Pause,
@@ -95,15 +100,19 @@ export class WebInput implements InputSource {
         x = lx;
         y = ly;
       }
-      // Map common buttons: A=possess, X=paint food, B=paint home, LB/RB zoom.
-      this.mapPadButton(pad, 0, GameAction.Possess);
-      this.mapPadButton(pad, 2, GameAction.PaintFood);
-      this.mapPadButton(pad, 1, GameAction.PaintHome);
-      this.mapPadButton(pad, 4, GameAction.ZoomOut);
-      this.mapPadButton(pad, 5, GameAction.ZoomIn);
-      this.mapPadButton(pad, 9, GameAction.Pause);
-      this.mapPadButton(pad, 3, GameAction.ToggleOverlay);
-      this.mapPadButton(pad, 8, GameAction.Recenter);
+      // Console-style mapping onto the shared action set.
+      this.mapPadButton(pad, 0, GameAction.Possess); // A
+      this.mapPadButton(pad, 1, GameAction.Release); // B
+      this.mapPadButton(pad, 2, GameAction.PaintFood); // X
+      this.mapPadButton(pad, 12, GameAction.PaintHome); // D-pad up
+      this.mapPadButton(pad, 3, GameAction.ToggleOverlay); // Y
+      this.mapPadButton(pad, 4, GameAction.OrbitLeft); // LB
+      this.mapPadButton(pad, 5, GameAction.OrbitRight); // RB
+      this.mapPadButton(pad, 9, GameAction.Pause); // Start
+      this.mapPadButton(pad, 8, GameAction.Recenter); // Back
+      // Right stick Y → zoom continuum.
+      const ry = deadzone(pad.axes[3] ?? 0);
+      if (ry !== 0) this.accumZoom += -ry * 0.5;
     }
 
     const l = Math.hypot(x, y);

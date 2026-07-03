@@ -99,6 +99,32 @@ the `requestAnimationFrame` loop).
 A console edition adds `platform/<target>/` with the same three interfaces over
 that platform's SDK. See [`PORTING.md`](PORTING.md).
 
+### 3D edition (Three.js)
+
+The 3D edition demonstrates the key property of the seam: **the renderer is
+swappable without touching the game or the core.** A 3D renderer needs a richer,
+scene-oriented contract than the 2D `Renderer`, and it owns its own drawing
+surface (WebGL context) — so instead of forcing it through the 2D interface, it
+uses a parallel host seam:
+
+- **`platform/Host3D.ts`** — the 3D host contract. Identical to `Platform`
+  except it exposes a `Surface3D` (canvas + device-pixel size) instead of a 2D
+  `Renderer`; **input and audio are the exact same abstractions**, reused
+  unchanged.
+- **`platform/web/WebHost3D.ts`** — browser host: shares `WebInput` + `WebAudio`
+  with the 2D edition, drives the rAF loop, leaves drawing to Three.
+- **`platform/three/ThreeStage.ts`** — WebGL renderer, scene, camera, dynamic
+  sky/sun/day-night, displaced-terrain ground, scattered scale props.
+- **`platform/three/AntField.ts`** — one `InstancedMesh` for all ants (single
+  draw call → scales to thousands), per-ant colour via `instanceColor`.
+
+The 3D game controller (`game/Game3D.ts`), camera (`game/CameraRig.ts`),
+terrain (`game/Terrain.ts`), scene sync (`game/WorldView3D.ts`), and DOM HUD
+(`game/HudDom.ts`) sit on top — and drive the **same `Simulation`** as the 2D
+edition, proving the core is presentation-agnostic. Coordinate convention: sim
+`x,y` → world `x,z`, with world `y` (height) a view-only concern the simulation
+never sees.
+
 ---
 
 ## `game/` — integration
