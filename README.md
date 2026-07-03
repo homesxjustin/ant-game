@@ -100,8 +100,15 @@ src/
 
 The 3D edition renders with **GPU-instanced ants** (thousands in one draw call),
 a **seamless three-mode camera** (`CameraRig`), a displaced-terrain world with
-scale props, and a **day/night cycle** — all over the untouched deterministic
-core. See [`docs/DESIGN_3D.md`](docs/DESIGN_3D.md).
+scale props, a **day/night cycle**, filmic tone mapping, sparing bloom, GPU
+grass wind, and drifting atmospheric motes — all over the untouched
+deterministic core. See [`docs/DESIGN_3D.md`](docs/DESIGN_3D.md).
+
+The **art bible** — targeting a photoreal Unreal Engine 5 production client
+(*Empire of the Small*) — lives in [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md),
+which honestly maps each requirement to what the WebGL build does now versus
+what belongs to the UE5 target. The deterministic core is the piece both clients
+share.
 
 Determinism (see `src/core/math/Rng.ts` and `Simulation.step`) is not
 decoration: it is what makes save-states, replays, automated tests, console

@@ -35,7 +35,21 @@ per-object interiors are authored content that sits on this base.
 A sun orbits a full day/night cycle driven by the deterministic sim clock:
 morning cool light → bright noon → golden-hour warmth → indigo night, with sky
 and fog colour and light intensity all interpolating (`ThreeStage.setDayPhase`).
-⬜ Dew, fireflies, and nocturnal-species swaps are follow-on content.
+Filmic ACES tone mapping and sparing bloom give a cinematic, never-evenly-lit
+look. ⬜ God rays, dew highlights, fireflies, and nocturnal-species swaps are
+follow-on content.
+
+## Living atmosphere ✅ (foundation)
+
+GPU-side wind sways every grass blade (tips lead, phased per blade) and drifting
+pollen/dust motes catch the light — the world breathes while you stand still.
+⬜ Falling leaves, flying insects, flowing water, and passing bird shadows are
+follow-on content.
+
+> **Photoreal target:** the full art bible ([ART_DIRECTION.md](ART_DIRECTION.md))
+> targets an Unreal Engine 5 production client (Nanite/Lumen/RT). This Three.js
+> build is the real-time look-and-feel prototype at WebGL fidelity; the UE5
+> client is another presentation layer over the same deterministic core.
 
 ## Underground world ⬜
 
